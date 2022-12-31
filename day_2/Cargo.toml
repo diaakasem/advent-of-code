@@ -1,5 +1,5 @@
 [package]
-name = "day_1"
+name = "day_2"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.0.32", features = ["derive"] }
 elves = { path="../elves" }
-ioutils = { path = "../ioutils" }
+ioutils = { path="../ioutils" }

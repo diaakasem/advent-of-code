@@ -34,8 +34,6 @@ fn main() {
     let elves = init_elves(&lines);
     elves.display_elves();
     println!("=======================================");
-    let elve = elves.get_elve_with_most_calories();
-    println!("The Elve with the most calories = {} calories", elve.total_calories());
-
-
+    let elves = elves.get_n_elves_with_most_calories(3);
+    println!("Elves with the most calories = {} calories", elves.get_total_calories());
 }
