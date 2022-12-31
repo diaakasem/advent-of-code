@@ -3,7 +3,6 @@
 members = [
     "day_1",
     "day_2",
-    "day_3",
     "elves",
     "rock_paper_scissors"
 ]

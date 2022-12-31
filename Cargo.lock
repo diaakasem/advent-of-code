@@ -67,15 +67,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "day_2"
-version = "0.1.0"
-dependencies = [
- "clap",
- "elves",
- "ioutils",
-]
-
-[[package]]
 name = "day_3"
 version = "0.1.0"
 dependencies = [
