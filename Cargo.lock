@@ -77,6 +77,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "day_3"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "ioutils",
+ "rucksacks",
+]
+
+[[package]]
 name = "elves"
 version = "0.1.0"
 
@@ -262,6 +271,10 @@ dependencies = [
  "elves",
  "rand",
 ]
+
+[[package]]
+name = "rucksacks"
+version = "0.1.0"
 
 [[package]]
 name = "rustix"
