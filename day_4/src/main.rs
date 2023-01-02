@@ -1,6 +1,7 @@
 use clap::Parser;
 use elves::cleaning_area::CleaningArea;
-use elves::elves::{Elve, ElvesPact};
+use elves::elves::Elve;
+use elves::pacts::ElvesPact;
 use ioutils::read_file_lines;
 
 #[derive(Parser, Debug)]
@@ -22,7 +23,7 @@ fn init_pacts(lines: &Vec<String>) -> Vec<ElvesPact> {
                     .map(|s| s.parse::<u32>().expect("Not a number"))
                     .collect::<Vec<u32>>();
                 let cleaning_area = CleaningArea::new(start_end[0], start_end[1]);
-                let mut e = Elve::new(0);
+                let mut e = Elve::new();
                 e.set_cleaning_area(cleaning_area);
                 e
             })
@@ -37,10 +38,11 @@ fn main() {
     let args = Args::parse();
     let lines = read_file_lines(&args.data);
     let pacts = init_pacts(&lines);
-    part_1(pacts);
+    part_1(&pacts);
+    part_2(&pacts);
 }
 
-fn part_1(pacts: Vec<ElvesPact>) {
+fn part_1(pacts: &Vec<ElvesPact>) {
     let count = pacts.iter().map(|pact| match pact.is_cleaning_area_redundant() {
         true => 1,
         false => 0
@@ -48,10 +50,10 @@ fn part_1(pacts: Vec<ElvesPact>) {
     println!("Number of redundant cleaning areas = {}", count);
 }
 
-// fn part_2(elves: &mut ElvesPact) {
-//     let elves = elves.get_n_elves_with_most_calories(3);
-//     println!(
-//         "Elves with the most calories = {} calories",
-//         elves.get_total_calories()
-//     );
-// }
+fn part_2(pacts: &Vec<ElvesPact>) {
+    let count = pacts.iter().map(|pact| match pact.is_cleaning_area_overlapping() {
+        true => 1,
+        false => 0
+    }).sum::<u32>();
+    println!("Number of redundant cleaning areas = {}", count);
+}
