@@ -1,5 +1,5 @@
 use clap::Parser;
-use elves::Elve;
+use elves::elves::Elve;
 use ioutils::read_file_lines;
 use rock_paper_scissors::{Game, Hand, Player};
 

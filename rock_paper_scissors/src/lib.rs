@@ -1,5 +1,5 @@
-use elves::Elve;
-use rand::Rng;
+use elves::elves::Elve;
+// use rand::Rng;
 
 #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub enum Hand {
@@ -9,16 +9,16 @@ pub enum Hand {
 }
 
 impl Hand {
-    fn get_random_hand() -> Self {
-        let mut rng = rand::thread_rng();
-        let random_number = rng.gen_range(0..3);
-        match random_number {
-            0 => Self::Rock,
-            1 => Self::Paper,
-            2 => Self::Scissors,
-            _ => panic!("Invalid random number"),
-        }
-    }
+    // fn get_random_hand() -> Self {
+    //     let mut rng = rand::thread_rng();
+    //     let random_number = rng.gen_range(0..3);
+    //     match random_number {
+    //         0 => Self::Rock,
+    //         1 => Self::Paper,
+    //         2 => Self::Scissors,
+    //         _ => panic!("Invalid random number"),
+    //     }
+    // }
 
     fn get_score(&self) -> i32 {
         match self {

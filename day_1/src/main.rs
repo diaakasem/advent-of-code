@@ -1,5 +1,5 @@
 use clap::Parser;
-use elves::ElvesPact;
+use elves::elves::ElvesPact;
 use ioutils::read_file_lines;
 
 #[derive(Parser, Debug)]
