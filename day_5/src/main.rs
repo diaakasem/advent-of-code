@@ -58,7 +58,8 @@ fn init_crane(lines: &Vec<String>) -> Crane {
         let count = tokens[1].parse().unwrap();
         let from: usize = tokens[3].parse().unwrap();
         let to: usize = tokens[5].parse().unwrap();
-        crane.move_blocks(count, from - 1, to - 1);
+        // crane.move_blocks(count, from - 1, to - 1);
+        crane.move_blocks_9001(count, from - 1, to - 1);
     });
     crane
 }

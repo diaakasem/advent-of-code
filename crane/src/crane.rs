@@ -34,6 +34,22 @@ impl Crane {
         println!("==================================================");
     }
 
+    pub fn move_blocks_9001(&mut self, count: usize, from: usize, to: usize) {
+        println!("--------------------------------------------------");
+        println!("Moving {} blocks from {} to {}", count, from, to);
+        println!("--------------------------------------------------");
+        self.display();
+        let stacks = self.stacks.clone();
+        let split_point = stacks[from].crates.len() - count;
+        let splits = stacks[from].crates.split_at(split_point);
+        self.stacks[from].crates = splits.0.to_vec();
+        self.stacks[to].crates.append(&mut splits.1.to_vec());
+        println!("--------------------------------------------------");
+        self.display();
+        println!("==================================================");
+    }
+
+
     /// Prints the current state of the crane
     ///
     /// # Examples

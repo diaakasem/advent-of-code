@@ -1,5 +1,6 @@
 use crate::crates::Crate;
 
+#[derive(Debug, Clone)]
 pub struct Stack {
     pub crates: Vec<Crate>,
 }
