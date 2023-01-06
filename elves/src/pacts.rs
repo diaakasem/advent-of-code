@@ -65,7 +65,7 @@ impl ElvesPact {
     }
 
     pub fn display_elves(&self) {
-        let mut i = 0;
+        let i = 0;
         self.get_elves().iter().for_each(|elve| {
             println!("Elve {}", i);
             elve.meals.iter().for_each(|meal| {
