@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
+// use std::sync::Arc;
 
 use crate::fs::dir::Dir;
 use crate::fs::file::File;
@@ -12,10 +13,10 @@ pub struct Prompt {
 
 impl Prompt {
     pub fn new() -> Self {
-        let root = Rc::new(RefCell::new(Dir::new("/", None)));
+        let root = RefCell::new(Dir::new("/", None));
         Self {
-            root: root.clone(),
-            cwd: root.clone(),
+            root: Rc::new(root.clone()),
+            cwd: Rc::new(root.clone()),
         }
     }
 
@@ -24,33 +25,52 @@ impl Prompt {
     }
 
     pub fn pwd(self: &Self) -> String {
-        let mut path = String::new();
-        let dir = self.cwd.clone();
-        while dir.borrow().parent.is_some() {
-            path = format!("{}/{}", dir.borrow().name, path);
-            dir.swap(&dir.borrow().parent.as_ref().unwrap().clone());
-        }
-        path = format!("/{}/{}", dir.borrow().name, path);
-        path
+        self.cwd.borrow().path()
     }
 
-    pub fn cd(self: &mut Self, path: &str) {
+    pub fn cd(&mut self, path: &str) {
         match path {
-            "/" => self.cwd.swap(&self.root),
+            "/" => {
+                if self.cwd.borrow().eq(&self.root.borrow()) {
+                    self.cwd = self.root.clone();
+                    // println!("cd / to root: {:?}", self.cwd.borrow().name);
+                }
+            }
             "." => (),
-            ".." => match &self.cwd.borrow().parent {
-                Some(parent) => self.cwd.swap(&parent),
-                None => self.cwd.swap(&self.root),
+            ".." => {
+                let me = self.cwd.clone();
+                let option_parent = self.cwd.borrow().get_parent();
+                match option_parent {
+                    Some(parent) => {
+                        // println!("[Before] cd .. to parent: {:?}", me.borrow().name);
+                        // println!("[Before] pwd: {}", self.pwd());
+                        // println!("[Before] size: {}", me.borrow().get_size());
+                        self.cwd = parent;
+                        let cwd = self.cwd.borrow();
+                        // println!("cd .. to parent: {:?}", cwd.name);
+                        // println!("pwd: {}", self.pwd());
+                        // println!("size: {}", cwd.get_size());
+                    },
+                    None => {
+                        self.cwd = self.root.clone();
+                        // println!("cd .. to root: {:?}", self.cwd.borrow().name);
+                    }
+                };
             },
             _ => {
                 let name = path;
-                if let Some(dir) = self.cwd.borrow().get_child_dir(name) {
-                    self.cwd.swap(&dir);
+                let child_option = self.cwd.borrow().get_child_dir(name);
+                if let Some(dir) = child_option {
+                    self.cwd = dir;
+                    // println!("cd to child: {:?}", self.cwd.borrow().name);
                 } else {
                     let d = Dir::new(name, Some(self.cwd.clone()));
                     self.cwd.borrow_mut().add_dir(d);
-                    self.cwd
-                        .swap(&self.cwd.borrow().get_child_dir(name).unwrap());
+                    let child_option = self.cwd.borrow().get_child_dir(name);
+                    if let Some(dir) = child_option {
+                        self.cwd = dir;
+                        // println!("cd to new child: {:?}", self.cwd.borrow().name);
+                    }
                 };
             }
         }
@@ -62,9 +82,10 @@ impl Prompt {
         match size_type {
             "dir" => {
                 let name = args.last().unwrap();
+                let dir = Dir::new(name, Some(self.cwd.clone()));
                 self.cwd
                     .borrow_mut()
-                    .add_dir(Dir::new(name, Some(self.cwd.clone())));
+                    .add_dir(dir);
             }
             _ => {
                 let size = size_type.parse::<u64>().unwrap();

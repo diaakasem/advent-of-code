@@ -45,8 +45,8 @@ fn pick_hand(opponent_hand: &Hand, lose_win_tie: &str) -> Hand {
 }
 
 fn init_explained_game(lines: &Vec<String>) -> Game {
-    let player1 = Player::new(Elve::new(1 as u8));
-    let player2 = Player::new(Elve::new(2 as u8));
+    let player1 = Player::new(Elve::new());
+    let player2 = Player::new(Elve::new());
     let mut game = Game::new(player1, player2);
     lines.iter().for_each(|line| {
         if line.len() == 0 {
@@ -64,8 +64,8 @@ fn init_explained_game(lines: &Vec<String>) -> Game {
 
 
 fn init_game(lines: &Vec<String>) -> Game {
-    let player1 = Player::new(Elve::new(1 as u8));
-    let player2 = Player::new(Elve::new(2 as u8));
+    let player1 = Player::new(Elve::new());
+    let player2 = Player::new(Elve::new());
     let mut game = Game::new(player1, player2);
     lines.iter().for_each(|line| {
         if line.len() == 0 {

@@ -138,8 +138,8 @@ mod tests {
 
     #[test]
     fn rock_paper_scissors_game_works() {
-        let player1 = Player::new(Elve::new(1 as u8));
-        let player2 = Player::new(Elve::new(2 as u8));
+        let player1 = Player::new(Elve::new());
+        let player2 = Player::new(Elve::new());
         let mut game = Game::new(player1, player2);
         game.play(Hand::Rock, Hand::Paper);
         game.play(Hand::Paper, Hand::Rock);

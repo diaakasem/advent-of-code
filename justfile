@@ -8,3 +8,6 @@ build:
 
 @test p:
   cargo test --package $p
+
+@check p:
+  cargo check --package $p

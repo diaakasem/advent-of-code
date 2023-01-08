@@ -13,12 +13,17 @@ struct Args {
 fn init_prompt(lines: Vec<String>) -> Prompt {
     let mut prompt = Prompt::new();
     for line in lines.iter() {
-        let mut segments = line.split(" ");
-        if segments.nth(0).unwrap() == "$" {
-            match segments.nth(1) {
+        // println!("======================================================");
+        // println!("line: {}", line);
+        let segments = line.split(" ").collect::<Vec<_>>();
+        if segments.get(0).unwrap().to_string() == "$".to_string() {
+            match segments.get(1) {
                 Some(command) => {
-                    if command == "cd" {
-                        prompt.cd(command);
+                    // println!("command: {}", command);
+                    if command.to_string() == "cd".to_string() {
+                        let path = segments.get(2).unwrap().to_string();
+                        // println!("path: {}", path);
+                        prompt.cd(path.as_str());
                     } else {
                         continue;
                     }

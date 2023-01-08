@@ -1,3 +1,5 @@
+use super::sizable::Sizable;
+
 #[derive(Clone, Debug)]
 pub struct File {
     pub name: String,
@@ -12,6 +14,14 @@ impl File {
         Self {
             name, size
         }
+    }
+
+}
+
+impl Sizable for File {
+
+    fn get_size(&self) -> u64 {
+        self.size
     }
 
 }
