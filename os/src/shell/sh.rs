@@ -110,4 +110,17 @@ impl Prompt {
         });
         dirs
     }
+
+    pub fn get_smallest_dir_greater_than(self: &Self, limit: u64) -> u64 {
+        let mut found_size = u64::MAX;
+        self.db.iter().for_each(|(path, size)| {
+            if *size >= limit && *size <= found_size {
+                found_size = *size;
+                // println!(" + {}: {}", path, size);
+            // } else {
+                // println!(" - {}: {}", path, size);
+            }
+        });
+        found_size
+    }
 }

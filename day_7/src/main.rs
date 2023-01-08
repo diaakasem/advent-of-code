@@ -1,6 +1,6 @@
 use clap::Parser;
 use ioutils::read_file_lines;
-use os::shell::sh::Prompt;
+use os::{shell::sh::Prompt, fs::sizable::Sizable};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -43,7 +43,8 @@ fn main() {
     let prompt = init_prompt(lines);
     prompt.tree();
     println!("======================================================");
-    part_1(&prompt)
+    part_1(&prompt);
+    part_2(&prompt);
 }
 
 fn part_1(prompt: &Prompt) {
@@ -53,3 +54,12 @@ fn part_1(prompt: &Prompt) {
     });
     println!("dirs: {:?}", dirs.values().sum::<u64>());
 }
+
+fn part_2(prompt: &Prompt) {
+    let limit = 30000000 - (70000000 - prompt.root.borrow().get_size());
+    println!("limit: {}", limit);
+    let found_size = prompt.get_smallest_dir_greater_than(limit);
+    println!("found_size: {}", found_size);
+}
+
+
