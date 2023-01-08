@@ -42,4 +42,14 @@ fn main() {
     let lines = read_file_lines(&args.data);
     let prompt = init_prompt(lines);
     prompt.tree();
+    println!("======================================================");
+    part_1(&prompt)
+}
+
+fn part_1(prompt: &Prompt) {
+    let dirs = prompt.get_dir_less_than(100000);
+    dirs.iter().for_each(|(path, size)| {
+        println!("{} {}", path, size);
+    });
+    println!("dirs: {:?}", dirs.values().sum::<u64>());
 }

@@ -1,12 +1,13 @@
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::rc::Rc;
-// use std::sync::Arc;
-
 use crate::fs::dir::Dir;
 use crate::fs::file::File;
+use crate::fs::sizable::Sizable;
 
 #[derive(Debug)]
 pub struct Prompt {
+    pub db: HashMap<String, u64>,
     pub root: Rc<RefCell<Dir>>,
     pub cwd: Rc<RefCell<Dir>>,
 }
@@ -15,6 +16,7 @@ impl Prompt {
     pub fn new() -> Self {
         let root = RefCell::new(Dir::new("/", None));
         Self {
+            db: HashMap::new(),
             root: Rc::new(root.clone()),
             cwd: Rc::new(root.clone()),
         }
@@ -38,7 +40,7 @@ impl Prompt {
             }
             "." => (),
             ".." => {
-                let me = self.cwd.clone();
+                // let me = self.cwd.clone();
                 let option_parent = self.cwd.borrow().get_parent();
                 match option_parent {
                     Some(parent) => {
@@ -46,7 +48,7 @@ impl Prompt {
                         // println!("[Before] pwd: {}", self.pwd());
                         // println!("[Before] size: {}", me.borrow().get_size());
                         self.cwd = parent;
-                        let cwd = self.cwd.borrow();
+                        // let cwd = self.cwd.borrow();
                         // println!("cd .. to parent: {:?}", cwd.name);
                         // println!("pwd: {}", self.pwd());
                         // println!("size: {}", cwd.get_size());
@@ -56,6 +58,7 @@ impl Prompt {
                         // println!("cd .. to root: {:?}", self.cwd.borrow().name);
                     }
                 };
+                self.db.insert(self.pwd(), self.cwd.borrow().get_size());
             },
             _ => {
                 let name = path;
@@ -91,7 +94,20 @@ impl Prompt {
                 let size = size_type.parse::<u64>().unwrap();
                 let name = args.last().unwrap();
                 self.cwd.borrow_mut().add_file(File::new(name, Some(size)));
+                self.db.insert(self.pwd(), self.cwd.borrow().get_size());
             }
         }
+    }
+
+    pub fn get_dir_less_than(self: &Self, limit: u64) -> HashMap<String, u64> {
+        let mut dirs: HashMap<String, u64> = HashMap::new();
+        self.db.iter().for_each(|(path, size)| {
+            if *size <= limit {
+                dirs.insert(path.clone(), *size);
+            } else {
+                // dirs.insert(path.clone(), *size);
+            }
+        });
+        dirs
     }
 }

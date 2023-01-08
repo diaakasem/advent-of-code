@@ -7,6 +7,7 @@ use super::file::File;
 
 #[derive(Debug, Clone)]
 pub struct Dir {
+    cached_size: u64,
     pub name: String,
     pub files: Vec<File>,
     pub dirs: Vec<Rc<RefCell<Dir>>>,
@@ -24,6 +25,9 @@ impl PartialEq for Dir {
 impl Sizable for Dir {
 
     fn get_size(&self) -> u64 {
+        if self.cached_size > 0 {
+            return self.cached_size;
+        }
         let mut size = self.files.iter().map(|file| file.size).sum::<u64>();
         // println!("Files size: {}", size);
         // println!("Files {}", self.files.len());
@@ -41,6 +45,7 @@ impl Dir {
         let files: Vec<File> = vec![];
         let dirs: Vec<Rc<RefCell<Self>>> = vec![];
         Self {
+            cached_size: 0,
             name,
             files,
             dirs,
@@ -52,13 +57,16 @@ impl Dir {
     }
 
     pub fn add_file(&mut self, file: File) {
+        self.cached_size = 0;
         self.files.push(file);
+
         // let f = self.files.last().unwrap();
         // println!("New file: {:?} {}", f.name, f.size);
         // println!("Size: {}", self.get_size());
     }
 
     pub fn add_dir(&mut self, dir: Self) {
+        self.cached_size = 0;
         self.dirs.push(Rc::new(RefCell::new(dir)));
         // println!("New dir: {:?}", self.dirs.last().unwrap().borrow().name);
     }
