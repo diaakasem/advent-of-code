@@ -125,6 +125,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "day_8"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "forest",
+ "ioutils",
+]
+
+[[package]]
 name = "elves"
 version = "0.1.0"
 
@@ -148,6 +157,10 @@ dependencies = [
  "cc",
  "libc",
 ]
+
+[[package]]
+name = "forest"
+version = "0.1.0"
 
 [[package]]
 name = "getrandom"
