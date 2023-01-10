@@ -1,4 +1,4 @@
-use std::{collections::HashSet, hash::{Hash, Hasher}};
+use std::{collections::HashSet, hash::{Hash, Hasher}, cell::RefCell, rc::Rc};
 
 pub enum Direction { R, L, U, D, }
 
@@ -6,7 +6,6 @@ pub trait Point  {
     fn get_x(&self) -> i32;
     fn get_y(&self) -> i32;
 }
-
 
 impl PartialEq for Box<dyn Point> {
     fn eq(&self, other: &Self) -> bool {
@@ -21,7 +20,6 @@ impl Hash for Box<dyn Point> {
     }
 }
 
-
 pub trait Movable {
     fn move_towards(&mut self, direction: &Direction, distance: i32);
 }
@@ -32,7 +30,7 @@ pub trait MoveSubscriber {
 }
 
 pub trait MovePublisher  {
-    fn subscribers(&mut self) -> &mut Vec<Box<dyn MoveSubscriber>>;
-    fn subscribe(&mut self, subscriber: Box<dyn MoveSubscriber>);
+    fn subscribers(&mut self) -> &mut Vec<Rc<RefCell<dyn MoveSubscriber>>>;
+    fn subscribe(&mut self, subscriber: Rc<RefCell<dyn MoveSubscriber>>);
     fn publish(&mut self);
 }

@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, cell::RefCell, rc::Rc};
 
 use crate::traits::*;
 
@@ -23,32 +23,80 @@ impl Point for XYPoint {
     }
 }
 
-pub struct Tail {
+pub struct Knot {
+    name: String,
     points: HashSet<Box<dyn Point>>,
+    subscribers: Vec<Rc<RefCell<dyn MoveSubscriber>>>,
     x: i32,
     y: i32,
 }
 
-impl Tail {
-    pub fn new() -> Tail {
-        let mut t = Tail {
+impl Knot {
+    pub fn new(name: &str) -> Knot {
+        let mut k = Knot {
+            name: name.to_string(),
             points: HashSet::new(),
+            subscribers: Vec::new(),
             x: 0,
             y: 0,
         };
         let point = Box::new(XYPoint::new(0, 0));
-        t.points.insert(point);
-        t
+        k.points.insert(point);
+        // println!("{}: x: {:?}, y: {:?}", k.name, k.x, k.y);
+        k
     }
 }
 
-impl MoveSubscriber for Tail {
+impl Point for Knot {
+    fn get_x(&self) -> i32 {
+        self.x
+    }
+
+    fn get_y(&self) -> i32 {
+        self.y
+    }
+}
+
+impl MovePublisher for Knot {
+    fn subscribe(&mut self, subscriber: Rc<RefCell<dyn MoveSubscriber>>) {
+        self.subscribers.push(subscriber);
+    }
+
+    fn subscribers(&mut self) -> &mut Vec<Rc<RefCell<dyn MoveSubscriber>>> {
+        &mut self.subscribers
+    }
+
+    fn publish(&mut self) {
+        let x = self.get_x();
+        let y = self.get_y();
+        for subscriber in self.subscribers().iter() {
+            subscriber.borrow_mut().on_move(x, y)
+        }
+    }
+}
+
+impl Movable for Knot {
+    fn move_towards(&mut self, dir: &Direction, steps: i32) {
+        match dir {
+            Direction::R => self.x += steps,
+            Direction::L => self.x -= steps,
+            Direction::U => self.y += steps,
+            Direction::D => self.y -= steps,
+        }
+        for _ in 0..steps {
+            self.publish();
+        }
+    }
+}
+
+impl MoveSubscriber for Knot {
 
     fn get_points(&self) -> &HashSet<Box<dyn Point>> {
         &self.points
     }
 
     fn on_move(&mut self, x: i32, y: i32) {
+        // println!("ONMOVE: {}: x: {:?}, y: {:?}", self.name, x, y);
         let same = self.x == x && self.y == y;
         let same_x = self.x == x;
         let same_y = self.y == y;
@@ -84,7 +132,9 @@ impl MoveSubscriber for Tail {
             }
         }
         let point = Box::new(XYPoint::new(self.x, self.y));
+        // println!("{}: x: {:?}, y: {:?}", self.name, self.x, self.y);
         self.points.insert(point);
+        self.publish();
     }
 }
 
