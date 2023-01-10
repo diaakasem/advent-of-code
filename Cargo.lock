@@ -134,6 +134,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "day_9"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "ioutils",
+]
+
+[[package]]
 name = "elves"
 version = "0.1.0"
 
