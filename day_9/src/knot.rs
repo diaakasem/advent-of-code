@@ -24,7 +24,6 @@ impl Point for XYPoint {
 }
 
 pub struct Knot {
-    name: String,
     points: HashSet<Box<dyn Point>>,
     subscribers: Vec<Rc<RefCell<dyn MoveSubscriber>>>,
     x: i32,
@@ -32,9 +31,8 @@ pub struct Knot {
 }
 
 impl Knot {
-    pub fn new(name: &str) -> Knot {
+    pub fn new() -> Knot {
         let mut k = Knot {
-            name: name.to_string(),
             points: HashSet::new(),
             subscribers: Vec::new(),
             x: 0,

@@ -2,12 +2,12 @@ mod traits;
 mod knot;
 
 
-use std::{sync::Mutex, cell::RefCell, rc::Rc};
+use std::{cell::RefCell, rc::Rc};
 
 use clap::Parser;
 use ioutils::read_file_lines;
 use knot::Knot;
-use traits::{MovePublisher, Direction, Movable, Point, MoveSubscriber};
+use traits::{MovePublisher, Direction, Movable, MoveSubscriber};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -29,8 +29,8 @@ fn main() {
 }
 
 fn part_1(input: &Vec<String>) -> usize {
-    let mut head = Knot::new("head");
-    let tail = Knot::new("tail");
+    let mut head = Knot::new();
+    let tail = Knot::new();
     head.subscribe(Rc::new(RefCell::new(tail)));
     for line in input {
         let mut dir_steps = line.split_whitespace();
@@ -50,16 +50,16 @@ fn part_1(input: &Vec<String>) -> usize {
 }
 
 fn part_2(input: &Vec<String>) -> usize {
-    let head = Rc::new(RefCell::new(Knot::new("head")));
-    let h1 = Rc::new(RefCell::new(Knot::new("h1")));
-    let h2 = Rc::new(RefCell::new(Knot::new("h2")));
-    let h3 = Rc::new(RefCell::new(Knot::new("h3")));
-    let h4 = Rc::new(RefCell::new(Knot::new("h4")));
-    let h5 = Rc::new(RefCell::new(Knot::new("h5")));
-    let h6 = Rc::new(RefCell::new(Knot::new("h6")));
-    let h7 = Rc::new(RefCell::new(Knot::new("h7")));
-    let h8 = Rc::new(RefCell::new(Knot::new("h8")));
-    let h9 = Rc::new(RefCell::new(Knot::new("h9")));
+    let head = Rc::new(RefCell::new(Knot::new()));
+    let h1 = Rc::new(RefCell::new(Knot::new()));
+    let h2 = Rc::new(RefCell::new(Knot::new()));
+    let h3 = Rc::new(RefCell::new(Knot::new()));
+    let h4 = Rc::new(RefCell::new(Knot::new()));
+    let h5 = Rc::new(RefCell::new(Knot::new()));
+    let h6 = Rc::new(RefCell::new(Knot::new()));
+    let h7 = Rc::new(RefCell::new(Knot::new()));
+    let h8 = Rc::new(RefCell::new(Knot::new()));
+    let h9 = Rc::new(RefCell::new(Knot::new()));
     head.borrow_mut().subscribe(h1.clone());
     h1.borrow_mut().subscribe(h2.clone());
     h2.borrow_mut().subscribe(h3.clone());
